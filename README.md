@@ -36,7 +36,9 @@
   environment:
     - DB_NAME=
     - DB_USER=
-    - DB_PASS=
+    - DB_PASSWORD=
+    - PUBLIC_KEY=
+    - PRIVATE_KEY=
   ...
   environment:
     - POSTGRES_DB=
@@ -44,15 +46,33 @@
     - POSTGRES_PASSWORD=
   ...
   ```
-  or using create `.env` file at root folder: 
+  or create `.env` file at root folder: 
   ```
   DB_NAME=your_db_name
   DB_USER=your_db_user_name
   DB_PASSWORD=your_db_pass_word
+  PRIVATE_KEY=your_rsa_private_key
+  PUBLIC_KEY=your_rsa_public_key
   ```
++ Generate RSA key: https://travistidwell.com/jsencrypt/demo/
 + Run: `docker-compose up`
 + Run in background: `docker-compose up -d`
 + To stop the app: `docker-compose down`
 + To run cmd with docker: 
   + bash into docker: `docker exec -it backend bash` & run your cmd. Run `exit` to exit the current bash
   + or run: `docker-compose run backend sh -c "your cmd here"`
+
+
+### Helpful:
++ Starts the Python interactive interpreter: `django-admin shell`
++ If you install a new dependency:
+  + Stop containers with: `docker-compose down`
+  + If you cannot stop container, get container id: `docker ps -a`, force delete with: `docker rm -f container-id`
+  + Install dependencies with `pip`  
+  + Run this cmd at root folder after install any new dependencies: `pip freeze > requirements.txt`
+  + Run containers: `docker-compose up`
++ If you create a new model, remember to migrate with: `python manage.py makemigrations` then `python manage.py migrate`
++ If you want to restart the database entirely new, remove the docker volume on database container:
+  + get volume name: `docker volume ls`
+  + remove volume: `docker volume rm volume_name`
+

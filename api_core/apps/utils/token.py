@@ -1,5 +1,5 @@
 import jwt
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.utils.translation import gettext_lazy as _
 
 from api_core import settings
@@ -16,11 +16,10 @@ class AccessToken:
     iat_claim = 'iat'
     exp_claim = 'exp'
 
-    def __init__(self):
+    def __init__(self, exp_time: timedelta = None):
         self.pub_key = settings.JWT_TOKEN.get('PUBLIC_KEY')
         self.private_key = settings.JWT_TOKEN.get('PRIVATE_KEY')
-        self.claims = settings.JWT_TOKEN.get('CLAIMS')
-        self.exp_time = settings.JWT_TOKEN.get('EXPIRATION_TIME')
+        self.exp_time = exp_time or settings.JWT_TOKEN.get('EXPIRATION_TIME')
         self.audience = settings.JWT_TOKEN.get('AUDIENCE')
         self.issuer = settings.JWT_TOKEN.get('ISSUER')
         self.algorithm = 'RS256'
@@ -43,7 +42,7 @@ class AccessToken:
         except Exception as e:
             raise TokenError(_(f'Token encoding error: {str(e)}'))
 
-    def verify(self, raw_token: str) -> dict:
+    def decode(self, raw_token: str, should_verify=True) -> dict:
         if raw_token is None or not raw_token or raw_token.isspace():
             raise TokenError(_('Failed to initiate token. Invalid parameter'))
         try:
@@ -57,12 +56,10 @@ class AccessToken:
                     'verify_iat': True,
                     'verify_exp': True,
                     'verify_iss': True,
-                    'verify_signature': True
+                    'verify_signature': should_verify
                 },
                 audience=[self.audience],
                 issuer=self.issuer,
             )
         except Exception as e:
             raise TokenError(_(f'Token decoding error: {str(e)}'))
-
-

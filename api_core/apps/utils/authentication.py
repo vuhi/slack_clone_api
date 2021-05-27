@@ -27,7 +27,7 @@ class JWTTokenAuthentication(authentication.BaseAuthentication):
         raw_token = self.get_raw_token(header)
         token = AccessToken()
         try:
-            token.verify(raw_token)
+            token.decode(raw_token)
         except TokenError as e:
             raise InvalidToken(_(str(e)))
         except Exception as e:

@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-!iqfc8#dh$!ur4-)hn&8^4b_!727(sz8tte4=e9v^jf$lt%irv'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('IS_DEV') or False,
 
 ALLOWED_HOSTS = ['*']
 
@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'api_core.apps.user'
+    'api_core.apps.user',
+    'api_core.apps.experiment',
+    # 'api_core.apps.auth'
 ]
 
 MIDDLEWARE = [
@@ -50,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'api_core.apps.utils.middlewares.ErrorHandlerMiddleware',
 ]
 
 ROOT_URLCONF = 'api_core.urls'
@@ -151,6 +154,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
     ],
+    'EXCEPTION_HANDLER': 'api_core.apps.utils.middlewares.drf_custom_exception_handler',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'api_core.apps.utils.authentication.JWTTokenAuthentication',
     )

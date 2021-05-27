@@ -7,4 +7,6 @@ urlpatterns = [
     path('ping', views.ping),
     path('protected', views.protected_ping),
     path('generate-token', views.generate_token),
+    path('error/normal', views.capture_normal_exception),
+    path('error/api', views.capture_api_exception),
 ]

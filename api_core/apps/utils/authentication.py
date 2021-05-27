@@ -27,14 +27,14 @@ class JWTTokenAuthentication(authentication.BaseAuthentication):
         raw_token = self.get_raw_token(header)
         token = AccessToken()
         try:
-            token.decode(raw_token)
+            claims = token.decode(raw_token)
+            user = self.user_model.objects.get(id=claims[AccessToken.id_claim])
+            print(user.display_name)
+            return user, None
         except TokenError as e:
             raise InvalidToken(_(str(e)))
         except Exception as e:
             raise InvalidToken(_(str(e)))
-
-        user = self.user_model.objects.get(id='21ba7a91-65b1-4cf3-9d56-0d0f1b3a3836')
-        return user, None
 
     def get_raw_token(self, header: str):
         parts = header.split(sep=self.token_separator)
@@ -47,3 +47,4 @@ class JWTTokenAuthentication(authentication.BaseAuthentication):
             raise BadAuthHeader(_('Invalid token prefix'))
 
         return parts[1]
+

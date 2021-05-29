@@ -1,10 +1,11 @@
 from datetime import timedelta
 
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.exceptions import APIException
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 
+from api_core.apps.utils.authentication import JWTTokenAuthentication
 from api_core.apps.utils.response import SuccessRes
 from api_core.apps.utils.token import AccessToken
 
@@ -15,6 +16,7 @@ def ping(request: Request):
 
 
 @api_view(['GET'])
+@authentication_classes([JWTTokenAuthentication])
 @permission_classes([IsAuthenticated])
 def protected_ping(request: Request):
     user = {'id': request.user.id, 'email': request.user.email}

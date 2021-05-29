@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'api_core.apps.user',
     'api_core.apps.experiment',
-    # 'api_core.apps.auth'
+    'api_core.apps.auth'
 ]
 
 MIDDLEWARE = [
@@ -155,9 +155,6 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.AllowAny',
     ],
     'EXCEPTION_HANDLER': 'api_core.apps.utils.middlewares.drf_custom_exception_handler',
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'api_core.apps.utils.authentication.JWTTokenAuthentication',
-    )
 }
 
 

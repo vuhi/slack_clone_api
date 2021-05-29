@@ -1,9 +1,10 @@
-import uuid
-
 from django.contrib.auth.models import PermissionsMixin, AbstractBaseUser, BaseUserManager
 from django.db import models
+from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+
+import uuid
 from api_core.apps.user import utils
 
 
@@ -37,6 +38,10 @@ class UserManage(BaseUserManager):
             raise ValueError(_('Superuser must be assigned to is_superuser=True.'))
 
         return self.create_user(email, first_name, last_name, password, **other_fields)
+
+    # should use this function to get user instead of model.get()
+    def get_active_user(self, **identity):
+        return self.get(Q(is_active=True), Q(**identity))
 
 
 class User(AbstractBaseUser, PermissionsMixin):

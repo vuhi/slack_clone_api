@@ -1,6 +1,8 @@
 import jwt
-from datetime import datetime, timedelta
+from datetime import timedelta
+
 from django.utils.translation import gettext_lazy as _
+from django.utils import timezone
 
 from api_core import settings
 from api_core.apps.utils.exceptions import TokenError
@@ -25,7 +27,7 @@ class AccessToken:
         self.algorithm = 'RS256'
 
     def sign(self, user_id: str) -> str:
-        current_time = datetime.utcnow()
+        current_time = timezone.now()
         payload = dict()
         payload.setdefault(AccessToken.id_claim, user_id)
         payload.setdefault(AccessToken.iss_claim, self.issuer)
@@ -40,11 +42,11 @@ class AccessToken:
                 algorithm=self.algorithm
             )
         except Exception as e:
-            raise TokenError(_(f'Token encoding error: {str(e)}'))
+            raise TokenError(_(f'token encoding error: {str(e)}'))
 
     def decode(self, raw_token: str, should_verify=True) -> dict:
         if raw_token is None or not raw_token or raw_token.isspace():
-            raise TokenError(_('Failed to initiate token. Invalid parameter'))
+            raise TokenError(_('failed to initiate token. Invalid parameter'))
         try:
             return jwt.decode(
                 jwt=raw_token,
@@ -62,4 +64,4 @@ class AccessToken:
                 issuer=self.issuer,
             )
         except Exception as e:
-            raise TokenError(_(f'Token decoding error: {str(e)}'))
+            raise TokenError(_(f'token decoding error: {str(e)}'))

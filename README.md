@@ -75,4 +75,5 @@
 + If you want to restart the database entirely new, remove the docker volume on database container:
   + get volume name: `docker volume ls`
   + remove volume: `docker volume rm volume_name`
++ webhook: https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks
 

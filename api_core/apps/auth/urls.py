@@ -3,5 +3,7 @@ from django.urls import path
 from api_core.apps.auth import views
 
 urlpatterns = [
-    # path('login', views.login),
+    # POST
+    path('register', views.register_user),
+    path('login', views.login),
 ]

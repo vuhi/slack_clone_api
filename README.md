@@ -39,6 +39,11 @@
     - DB_PASSWORD=
     - PUBLIC_KEY=
     - PRIVATE_KEY=
+    - IS_DEV=
+    - GG_OAUTH_CLIENT_ID=
+    - GG_OAUTH_CLIENT_SECRET=
+    - FB_OAUTH_CLIENT_ID=
+    - FB_OAUTH_CLIENT_SECRET=
   ...
   environment:
     - POSTGRES_DB=
@@ -53,6 +58,11 @@
   DB_PASSWORD=your_db_pass_word
   PRIVATE_KEY=your_rsa_private_key
   PUBLIC_KEY=your_rsa_public_key
+  IS_DEV=your_is_dev
+  GG_OAUTH_CLIENT_ID=your_google_oauth_client_id
+  GG_OAUTH_CLIENT_SECRET=your_google_oauth_client_secret
+  FB_OAUTH_CLIENT_ID=your_facebook_oauth_client_id
+  FB_OAUTH_CLIENT_SECRET=your_facebook_oauth_client_secret
   ```
 + Generate RSA key: https://travistidwell.com/jsencrypt/demo/
 + Run: `docker-compose up`
@@ -76,4 +86,7 @@
   + get volume name: `docker volume ls`
   + remove volume: `docker volume rm volume_name`
 + webhook: https://support.discord.com/hc/en-us/articles/228383668-Intro-to-Webhooks
++ Oauth configuration:
+  + Google: https://console.cloud.google.com/apis/dashboard
+  + FB: https://developers.facebook.com/apps
 

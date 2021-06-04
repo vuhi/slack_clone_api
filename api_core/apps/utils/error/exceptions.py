@@ -23,3 +23,18 @@ class InvalidLoginCredential(exceptions.APIException):
     status_code = status.HTTP_401_UNAUTHORIZED
     default_code = 'bad_credential'
     default_detail = 'invalid credential, please check your login credentials'
+
+
+class RequiredParametersAbsent(exceptions.APIException):
+    """ missing required parameters exception """
+    status_code = status.HTTP_400_BAD_REQUEST
+    default_code = 'missing_parameters'
+    default_detail = 'one or more required parameters were missing'
+
+
+class MissMatchedType(exceptions.APIException):
+    """ incorrect type exception """
+    status_code = status.HTTP_400_BAD_REQUEST
+    default_code = 'miss_matched_type'
+    default_detail = 'supplied argument(s) type does not match'
+

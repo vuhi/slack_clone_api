@@ -1,15 +1,17 @@
 import jwt
 from datetime import timedelta
+from dependency_injector.wiring import inject, Provide
 
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 
-from api_core import settings
-from api_core.apps.utils.exceptions import TokenError
+from api_core import DIContainer
+from api_core.apps.utils.error.exceptions import TokenError
 
 
 # https://pyjwt.readthedocs.io/en/stable/api.html
 # https://pyjwt.readthedocs.io/en/stable/usage.html#encoding-decoding-tokens-with-rs256-rsa
+@inject
 class AccessToken:
     token_type = 'access_token'
     id_claim = 'id'
@@ -18,13 +20,13 @@ class AccessToken:
     iat_claim = 'iat'
     exp_claim = 'exp'
 
-    def __init__(self, exp_time: timedelta = None):
-        self.pub_key = settings.JWT_TOKEN.get('PUBLIC_KEY')
-        self.private_key = settings.JWT_TOKEN.get('PRIVATE_KEY')
-        self.exp_time = exp_time or settings.JWT_TOKEN.get('EXPIRATION_TIME')
-        self.audience = settings.JWT_TOKEN.get('AUDIENCE')
-        self.issuer = settings.JWT_TOKEN.get('ISSUER')
-        self.algorithm = 'RS256'
+    def __init__(self, exp_time: timedelta = None, jwt_conf: dict = Provide[DIContainer.config.JWT_TOKEN]):
+        self.pub_key = jwt_conf.get('PUBLIC_KEY')
+        self.private_key = jwt_conf.get('PRIVATE_KEY')
+        self.exp_time = exp_time or jwt_conf.get('EXPIRATION_TIME')
+        self.audience = jwt_conf.get('AUDIENCE')
+        self.issuer = jwt_conf.get('ISSUER')
+        self.algorithm = jwt_conf.get('ALGORITHM')
 
     def sign(self, user_id: str) -> str:
         current_time = timezone.now()
@@ -63,5 +65,7 @@ class AccessToken:
                 audience=[self.audience],
                 issuer=self.issuer,
             )
+        except jwt.exceptions.ExpiredSignatureError as e:
+            raise e
         except Exception as e:
             raise TokenError(_(f'token decoding error: {str(e)}'))

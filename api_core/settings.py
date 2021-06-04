@@ -39,9 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'api_core.apps.utils',
+    'api_core.apps.auth',
     'api_core.apps.user',
     'api_core.apps.experiment',
-    'api_core.apps.auth'
 ]
 
 MIDDLEWARE = [
@@ -52,7 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'api_core.apps.utils.middlewares.ErrorHandlerMiddleware',
+    'api_core.apps.utils.error.exception_middleware.ErrorHandlerMiddleware',
 ]
 
 ROOT_URLCONF = 'api_core.urls'
@@ -148,13 +149,14 @@ JWT_TOKEN = {
     'EXPIRATION_TIME': timedelta(hours=6),
     'AUDIENCE': 'slack_clone_front_end',
     'ISSUER': 'slack_clone_back_end',
+    'ALGORITHM': 'RS256'
 }
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
     ],
-    'EXCEPTION_HANDLER': 'api_core.apps.utils.middlewares.drf_custom_exception_handler',
+    'EXCEPTION_HANDLER': 'api_core.apps.utils.error.exception_handler.drf_custom_exception_handler',
 }
 
 

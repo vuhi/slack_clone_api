@@ -40,10 +40,13 @@
     - PUBLIC_KEY=
     - PRIVATE_KEY=
     - IS_DEV=
-    - GG_OAUTH_CLIENT_ID=
-    - GG_OAUTH_CLIENT_SECRET=
-    - FB_OAUTH_CLIENT_ID=
-    - FB_OAUTH_CLIENT_SECRET=
+    - OAUTH_REDIRECT_PATH=
+    - GOOGLE_OAUTH_CLIENT_ID=
+    - GOOGLE_OAUTH_CLIENT_SECRET=
+    - GOOGLE_OAUTH_SCOPES=
+    - FACEBOOK_OAUTH_CLIENT_ID=
+    - FACEBOOK_OAUTH_CLIENT_SECRET=
+    - FACEBOOK_OAUTH_SCOPES=
   ...
   environment:
     - POSTGRES_DB=
@@ -59,10 +62,13 @@
   PRIVATE_KEY=your_rsa_private_key
   PUBLIC_KEY=your_rsa_public_key
   IS_DEV=your_is_dev
-  GG_OAUTH_CLIENT_ID=your_google_oauth_client_id
-  GG_OAUTH_CLIENT_SECRET=your_google_oauth_client_secret
-  FB_OAUTH_CLIENT_ID=your_facebook_oauth_client_id
-  FB_OAUTH_CLIENT_SECRET=your_facebook_oauth_client_secret
+  OAUTH_REDIRECT_PATH=your_oauth_redirect_path
+  GOOGLE_OAUTH_CLIENT_ID=your_google_oauth_clien_id
+  GOOGLE_OAUTH_CLIENT_SECRET=your_google_oauth_secret
+  GOOGLE_OAUTH_SCOPES=your_google_oauth_scopes
+  FACEBOOK_OAUTH_CLIENT_ID=your_fb_oauth_client_id
+  FACEBOOK_OAUTH_CLIENT_SECRET=your_fb_oauth_secret
+  FACEBOOK_OAUTH_SCOPES=your_fb_oauth_scopes
   ```
 + Generate RSA key: https://travistidwell.com/jsencrypt/demo/
 + Run: `docker-compose up`

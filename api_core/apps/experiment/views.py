@@ -5,9 +5,9 @@ from rest_framework.exceptions import APIException
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 
-from api_core.apps.utils.authentication import JWTTokenAuthentication
+from api_core.apps.utils.auth.auth_class import JWTTokenAuthentication
 from api_core.apps.utils.response import SuccessRes
-from api_core.apps.utils.token import AccessToken
+from api_core.apps.utils.auth.access_token import AccessToken
 
 
 @api_view(['GET'])

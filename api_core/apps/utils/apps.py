@@ -8,5 +8,5 @@ class Utils(AppConfig):
     label = 'utils'
 
     def ready(self):
-        from .auth import auth_class, access_token
-        di_container.wire(modules=[access_token, auth_class])
+        from .auth import auth_class, access_token, oauth_service, oauth_factory
+        di_container.wire(modules=[access_token, auth_class, oauth_service, oauth_factory])

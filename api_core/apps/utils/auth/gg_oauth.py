@@ -1,16 +1,14 @@
-import os
-
-from .oauth_config import OAuthConfig
+from .oauth_service import OAuthService
 from .oauth_type import OAuthType
 
 
-class GoogleOAuth(OAuthConfig):
+class GoogleOAuth(OAuthService):
     def __init__(self):
         super().__init__(OAuthType.GoogleOAuth.value)
 
     @property
     def scopes(self) -> str:
-        scopes = os.environ.get(f'{self.oauth_type}_SCOPES')
+        scopes = self.oauth_conf.get(f'{self.oauth_type}_SCOPES')
         return ' '.join(scopes.split(sep=','))
 
     def get_config(self) -> dict:

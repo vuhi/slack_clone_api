@@ -1,11 +1,10 @@
-import os
 import uuid
 
-from .oauth_config import OAuthConfig
+from .oauth_service import OAuthService
 from .oauth_type import OAuthType
 
 
-class FaceBookOAuth(OAuthConfig):
+class FaceBookOAuth(OAuthService):
     def __init__(self):
         super().__init__(OAuthType.FaceBookOAuth.value)
         self.auth_type = 'rerequest'
@@ -13,7 +12,7 @@ class FaceBookOAuth(OAuthConfig):
 
     @property
     def scopes(self) -> str:
-        return os.environ.get(f'{self.oauth_type}_SCOPES')
+        return self.oauth_conf.get(f'{self.oauth_type}_SCOPES')
 
     def get_config(self) -> dict:
         return {

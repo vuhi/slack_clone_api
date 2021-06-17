@@ -39,10 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'api_core.apps.utils',
-    'api_core.apps.auth',
-    'api_core.apps.user',
+    'api_core.apps.core',
     'api_core.apps.experiment',
+    'api_core.apps.auth',
+    # 'api_core.apps.user',
+
 ]
 
 MIDDLEWARE = [
@@ -53,7 +54,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'api_core.apps.utils.error.exception_middleware.ErrorHandlerMiddleware',
+    'api_core.apps.core.utils.error.exception_middleware.ErrorHandlerMiddleware',
 ]
 
 ROOT_URLCONF = 'api_core.urls'
@@ -140,7 +141,7 @@ STATIC_URL = '/static/'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-AUTH_USER_MODEL = "user.User"
+AUTH_USER_MODEL = "core.User"
 
 JWT_TOKEN = {
     'PUBLIC_KEY': os.environ.get('PUBLIC_KEY'),
@@ -149,7 +150,9 @@ JWT_TOKEN = {
     'EXPIRATION_TIME': timedelta(hours=6),
     'AUDIENCE': 'slack_clone_front_end',
     'ISSUER': 'slack_clone_back_end',
-    'ALGORITHM': 'RS256'
+    'ALGORITHM': 'RS256',
+    'TOKEN_PART_SEPARATOR': ' ',
+    'TOKEN_HEADER': 'Authorization'
 }
 
 OAUTH = {
@@ -157,16 +160,41 @@ OAUTH = {
     'GOOGLE_OAUTH_SCOPES': os.environ.get('GOOGLE_OAUTH_SCOPES'),
     'GOOGLE_OAUTH_CLIENT_SECRET': os.environ.get('GOOGLE_OAUTH_CLIENT_SECRET'),
     'GOOGLE_OAUTH_CLIENT_ID': os.environ.get('GOOGLE_OAUTH_CLIENT_ID'),
+    'GOOGLE_OAUTH_EXCHANGE_CODE_ENDPOINT': os.environ.get('GOOGLE_OAUTH_EXCHANGE_CODE_ENDPOINT'),
     'FACEBOOK_OAUTH_CLIENT_ID': os.environ.get('FACEBOOK_OAUTH_CLIENT_ID'),
     'FACEBOOK_OAUTH_CLIENT_SECRET': os.environ.get('FACEBOOK_OAUTH_CLIENT_SECRET'),
     'FACEBOOK_OAUTH_SCOPES': os.environ.get('FACEBOOK_OAUTH_SCOPES'),
+    'FACEBOOK_OAUTH_EXCHANGE_CODE_ENDPOINT': os.environ.get('FACEBOOK_OAUTH_EXCHANGE_CODE_ENDPOINT'),
 }
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
     ],
-    'EXCEPTION_HANDLER': 'api_core.apps.utils.error.exception_handler.drf_custom_exception_handler',
+    'EXCEPTION_HANDLER': 'api_core.apps.core.utils.error.exception_handler.drf_custom_exception_handler',
 }
 
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'formatters': {
+#         'simple': {
+#             'format': '[{asctime}] <{levelname}>: {message}',
+#             'style': '{',
+#         }
+#     },
+#     'handlers': {
+#         'console': {
+#             'level': 'DEBUG',
+#             'class': 'logging.StreamHandler',
+#             'formatter': 'simple'
+#         },
+#     },
+#     'loggers': {
+#         'django': {
+#             'handlers': ['console']
+#         }
+#     }
+# }
+#
 

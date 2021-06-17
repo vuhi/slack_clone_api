@@ -5,37 +5,31 @@ from dependency_injector.wiring import inject, Provide
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 
-from api_core import DIContainer
-from api_core.apps.utils.error.exceptions import TokenError
+from api_core.apps.type import Claim, IToken, JWTConfig
+from ...utils.error.exceptions import TokenError
 
 
 # https://pyjwt.readthedocs.io/en/stable/api.html
 # https://pyjwt.readthedocs.io/en/stable/usage.html#encoding-decoding-tokens-with-rs256-rsa
 @inject
-class AccessToken:
-    token_type = 'access_token'
-    id_claim = 'id'
-    iss_claim = 'iss'
-    aud_claim = 'aud'
-    iat_claim = 'iat'
-    exp_claim = 'exp'
-
-    def __init__(self, exp_time: timedelta = None, jwt_conf: dict = Provide[DIContainer.config.JWT_TOKEN]):
+class AccessToken(IToken):
+    def __init__(self, exp_time: timedelta = None, jwt_conf: JWTConfig = Provide['config.JWT_TOKEN']):
         self.pub_key = jwt_conf.get('PUBLIC_KEY')
         self.private_key = jwt_conf.get('PRIVATE_KEY')
         self.exp_time = exp_time or jwt_conf.get('EXPIRATION_TIME')
         self.audience = jwt_conf.get('AUDIENCE')
         self.issuer = jwt_conf.get('ISSUER')
         self.algorithm = jwt_conf.get('ALGORITHM')
+        self.type = 'access_token'
 
     def sign(self, user_id: str) -> str:
         current_time = timezone.now()
         payload = dict()
-        payload.setdefault(AccessToken.id_claim, user_id)
-        payload.setdefault(AccessToken.iss_claim, self.issuer)
-        payload.setdefault(AccessToken.aud_claim, self.audience)
-        payload.setdefault(AccessToken.iat_claim, current_time)
-        payload.setdefault(AccessToken.exp_claim, current_time + self.exp_time)
+        payload.setdefault(self.CLAIM.ID, user_id)
+        payload.setdefault(self.CLAIM.ISSUER, self.issuer)
+        payload.setdefault(self.CLAIM.AUDIENCE, self.audience)
+        payload.setdefault(self.CLAIM.ISSUED_AT, current_time)
+        payload.setdefault(self.CLAIM.EXP_TIME, current_time + self.exp_time)
 
         try:
             return jwt.encode(
@@ -46,7 +40,7 @@ class AccessToken:
         except Exception as e:
             raise TokenError(_(f'token encoding error: {str(e)}'))
 
-    def decode(self, raw_token: str, should_verify=True) -> dict:
+    def decode(self, raw_token: str, should_verify=True) -> Claim:
         if raw_token is None or not raw_token or raw_token.isspace():
             raise TokenError(_('failed to initiate token. Invalid parameter'))
         try:

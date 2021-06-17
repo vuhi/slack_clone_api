@@ -1,0 +1,8 @@
+# ignore venv
+venv
+.gitignore
+db.sqlite3
+docker-compose.yml
+Dockerfile
+private.key
+public.key

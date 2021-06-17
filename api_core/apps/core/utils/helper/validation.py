@@ -24,6 +24,8 @@ def validate_email(email):
         )
 
 
+
+
 # class WeakPasswordValidator:
 #     """ Custom password validation class"""
 #

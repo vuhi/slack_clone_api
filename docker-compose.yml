@@ -17,10 +17,11 @@ services:
       slack_clone_network:
 
   backend:
-    build:
-      context: .
+    build: .
     ports:
       - "8000:8000"
+    # use volumes in development only
+    # comment this section out when deploying
     volumes:
       - .:/slack_clone_api
     # https://docs.docker.com/storage/volumes/
@@ -39,9 +40,11 @@ services:
       - GOOGLE_OAUTH_CLIENT_ID=${GOOGLE_OAUTH_CLIENT_ID}
       - GOOGLE_OAUTH_CLIENT_SECRET=${GOOGLE_OAUTH_CLIENT_SECRET}
       - GOOGLE_OAUTH_SCOPES=${GOOGLE_OAUTH_SCOPES}
+      - GOOGLE_OAUTH_EXCHANGE_CODE_ENDPOINT=${GOOGLE_OAUTH_EXCHANGE_CODE_ENDPOINT}
       - FACEBOOK_OAUTH_CLIENT_ID=${FACEBOOK_OAUTH_CLIENT_ID}
       - FACEBOOK_OAUTH_CLIENT_SECRET=${FACEBOOK_OAUTH_CLIENT_SECRET}
       - FACEBOOK_OAUTH_SCOPES=${FACEBOOK_OAUTH_SCOPES}
+      - FACEBOOK_OAUTH_EXCHANGE_CODE_ENDPOINT=${FACEBOOK_OAUTH_EXCHANGE_CODE_ENDPOINT}
     depends_on:
       - backend_db
     networks:

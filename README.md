@@ -44,9 +44,11 @@
     - GOOGLE_OAUTH_CLIENT_ID=
     - GOOGLE_OAUTH_CLIENT_SECRET=
     - GOOGLE_OAUTH_SCOPES=
+    - GOOGLE_OAUTH_EXCHANGE_CODE_ENDPOINT=
     - FACEBOOK_OAUTH_CLIENT_ID=
     - FACEBOOK_OAUTH_CLIENT_SECRET=
     - FACEBOOK_OAUTH_SCOPES=
+    - FACEBOOK_OAUTH_EXCHANGE_CODE_ENDPOINT=
   ...
   environment:
     - POSTGRES_DB=
@@ -66,9 +68,11 @@
   GOOGLE_OAUTH_CLIENT_ID=your_google_oauth_clien_id
   GOOGLE_OAUTH_CLIENT_SECRET=your_google_oauth_secret
   GOOGLE_OAUTH_SCOPES=your_google_oauth_scopes
+  GOOGLE_OAUTH_EXCHANGE_CODE_ENDPOINT=your_google_oauth_exchange_code_endpoint
   FACEBOOK_OAUTH_CLIENT_ID=your_fb_oauth_client_id
   FACEBOOK_OAUTH_CLIENT_SECRET=your_fb_oauth_secret
   FACEBOOK_OAUTH_SCOPES=your_fb_oauth_scopes
+  FACEBOOK_OAUTH_EXCHANGE_CODE_ENDPOINT=your_fb_oauth_exchange_code_endpoint
   ```
 + Generate RSA key: https://travistidwell.com/jsencrypt/demo/
 + Run: `docker-compose up`
@@ -87,7 +91,7 @@
   + Install dependencies with `pip`  
   + Run this cmd at root folder after install any new dependencies: `pip freeze > requirements.txt`
   + Run containers: `docker-compose up`
-+ If you create a new model, remember to migrate with: `python manage.py makemigrations` then `python manage.py migrate`
++ If you create a new model, remember to migrate with: `python manage.py makemigrations <app_name>` then `python manage.py migrate`
 + If you want to restart the database entirely new, remove the docker volume on database container:
   + get volume name: `docker volume ls`
   + remove volume: `docker volume rm volume_name`

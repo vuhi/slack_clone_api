@@ -2,14 +2,15 @@ from jwt import ExpiredSignatureError
 from dependency_injector.wiring import Provide, inject
 
 from django.contrib.auth import get_user_model
+
 from django.utils.translation import gettext_lazy as _
 from rest_framework import authentication
 from rest_framework.request import Request
 
-from api_core import DIContainer
-from api_core.apps.user.models import User
-from api_core.apps.utils.error.exceptions import BadAuthHeader, InvalidToken, TokenError
-from api_core.apps.utils.auth.access_token import AccessToken
+from api_core.apps.type import JWTConfig
+from .access_token import AccessToken
+from ...db.user.model import User
+from ...utils.error.exceptions import BadAuthHeader, InvalidToken, TokenError
 
 
 # https://www.django-rest-framework.org/api-guide/authentication/#custom-authentication
@@ -17,12 +18,12 @@ from api_core.apps.utils.auth.access_token import AccessToken
 @inject
 class JWTTokenAuthentication(authentication.BaseAuthentication):
 
-    def __init__(self, jwt_conf: dict = Provide[DIContainer.config.JWT_TOKEN], *args, **kwargs):
+    def __init__(self, jwt_conf: JWTConfig = Provide['config.JWT_TOKEN'], *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.user_model: User = get_user_model()
-        self.token_separator: str = jwt_conf.get('TOKEN_PART_SEPARATOR') or ' '
+        self.token_separator: str = jwt_conf.get('TOKEN_PART_SEPARATOR')
         self.token_prefix_tup: tuple[str] = jwt_conf.get('TOKEN_PREFIX')
-        self.header: str = jwt_conf.get('TOKEN_HEADER') or 'Authorization'
+        self.header: str = jwt_conf.get('TOKEN_HEADER')
 
     def authenticate(self, request: Request):
         # https://docs.djangoproject.com/en/dev/ref/request-response/#django.http.HttpRequest.META
@@ -34,7 +35,8 @@ class JWTTokenAuthentication(authentication.BaseAuthentication):
         token = AccessToken()
         try:
             claims = token.decode(raw_token)
-            user = self.user_model.objects.get_active_user(id=claims[AccessToken.id_claim])
+            # TODO: change it to user_service
+            user = self.user_model.users.get_active_user(id=claims[token.CLAIM.ID])  # type: ignore
             return user, None
         except ExpiredSignatureError as e:
             raise InvalidToken(_(str(e)))
@@ -43,7 +45,7 @@ class JWTTokenAuthentication(authentication.BaseAuthentication):
         except Exception as e:
             raise InvalidToken(_('invalid token received'))
 
-    def get_raw_token(self, header: str):
+    def get_raw_token(self, header: str) -> str:
         parts = header.split(sep=self.token_separator)
 
         if len(parts) != 2:
@@ -54,4 +56,3 @@ class JWTTokenAuthentication(authentication.BaseAuthentication):
             raise BadAuthHeader(_('Invalid token prefix'))
 
         return parts[1]
-

@@ -1,9 +1,9 @@
 from django.apps import AppConfig
 
 
-class AuthConfig(AppConfig):
-    name = 'api_core.apps.auth'
-    label = 'auth_route'
+class ExperimentConfig(AppConfig):
+    name = 'api_core.apps.experiment'
+    label = 'experiment_route'
 
     def ready(self):
         from . import views

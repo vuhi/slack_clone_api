@@ -16,8 +16,9 @@ class UserManage(BaseUserManager):
         validation.validate_email(email)
         user = self.model(email=email, full_name=full_name, **other_fields)
 
-        validation.validate_weak_password(password)
-        user.set_password(password)
+        if password:
+            validation.validate_weak_password(password)
+            user.set_password(password)
 
         user.display_name = email.split(sep='@')[0]
 

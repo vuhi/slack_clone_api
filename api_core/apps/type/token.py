@@ -1,5 +1,7 @@
 import abc
 
+from .claim import Claim
+
 
 class IToken(metaclass=abc.ABCMeta):
 
@@ -15,6 +17,6 @@ class IToken(metaclass=abc.ABCMeta):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def decode(self, raw_token: str, should_verify=True) -> dict:
+    def decode(self, raw_token: str, should_verify=True) -> Claim:
         raise NotImplementedError
 

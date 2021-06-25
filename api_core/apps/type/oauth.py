@@ -2,7 +2,7 @@ import uuid
 from abc import ABCMeta, abstractmethod
 from typing import Literal, TypedDict
 
-from dependency_injector.wiring import Provide
+from api_core.apps.core.db.user.model import User
 
 
 class OAuthType:
@@ -76,9 +76,9 @@ class FaceBookOAuthUser(OAuthUser, FaceBookOAuthError):
 
 class IOAuthService(metaclass=ABCMeta):
     def __init__(
-            self,
-            oauth_type: Literal['GOOGLE_OAUTH', 'FACEBOOK_OAUTH'],
-            oauth_conf: dict = Provide['config.OAUTH']
+        self,
+        oauth_type: Literal['GOOGLE_OAUTH', 'FACEBOOK_OAUTH'],
+        oauth_conf: dict
     ):
         self.oauth_type = oauth_type
         self.response_type = 'code'
@@ -124,5 +124,9 @@ class IOAuthService(metaclass=ABCMeta):
 
     @abstractmethod
     def get_oauth_user(self, oauth_token: str) -> OAuthUser:
+        raise NotImplementedError
+
+    @abstractmethod
+    def oauth_login(self, oauth_user: OAuthUser) -> User:
         raise NotImplementedError
 

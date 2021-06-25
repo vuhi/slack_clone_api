@@ -42,8 +42,8 @@ INSTALLED_APPS = [
     'api_core.apps.core',
     'api_core.apps.experiment',
     'api_core.apps.auth',
-    # 'api_core.apps.user',
-
+    'api_core.apps.user',
+    'api_core.apps.ioc',
 ]
 
 MIDDLEWARE = [

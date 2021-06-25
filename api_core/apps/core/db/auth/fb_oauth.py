@@ -1,15 +1,22 @@
 import requests
 import urllib.parse
 
-from api_core.apps.type import OAuthType, IOAuthService, FaceBookOAuthResponse, FaceBookOAuthUser
+from dependency_injector.wiring import inject, Provide
+
+from api_core.apps.type import OAuthType, IOAuthService, FaceBookOAuthResponse, FaceBookOAuthUser, OAuthUser
 from api_core.apps.core.utils.error.exceptions import OAuthError
+from .model import FaceBookAuth
+from ..user.model import User
 
 
+@inject
 class FaceBookOAuth(IOAuthService):
-    def __init__(self):
-        super().__init__(OAuthType.FaceBookOAuth)
+    def __init__(self, oauth_conf: dict = Provide['config.OAUTH']):
+        super().__init__(OAuthType.FaceBookOAuth, oauth_conf)
         self.auth_type = 'rerequest'
         self.fields = ['id', 'name', 'email']
+        self.FaceBookAuth = FaceBookAuth
+        self.User = User
 
     @property
     def scopes(self) -> str:
@@ -54,4 +61,27 @@ class FaceBookOAuth(IOAuthService):
             raise OAuthError(data['error']['message'])
 
         return data
+
+    def oauth_login(self, oauth_user: OAuthUser) -> User:
+        # oauth login email always stays the same
+        # if a person have two different social account -> 2 users will be created
+        # get by oauth_id or create new record in oauth table
+        facebook_auth, created = self.FaceBookAuth.service.get_or_create(
+            oauth_id=oauth_user['id'],
+            defaults={'oauth_id': oauth_user['id']}
+        )
+
+        # if created=true -> create a new user & associate with facebook_auth
+        if created:
+            user = self.User.service.create_user(
+                email=oauth_user['email'],
+                full_name=oauth_user['name'],
+                password=None
+            )
+            user.facebook_auth = facebook_auth
+            user.facebook_auth.save()
+            return user
+
+        return facebook_auth.user
+
 

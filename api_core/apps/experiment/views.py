@@ -1,10 +1,12 @@
 from datetime import timedelta
 
+from dependency_injector.wiring import Provide, inject
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 from rest_framework.exceptions import APIException
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 
+from api_core.apps.core.db.user.model import User
 from api_core.apps.core.utils.auth.access_token import AccessToken
 from api_core.apps.core.utils.auth.auth_class import JWTTokenAuthentication
 from api_core.apps.core.utils.res.success import SuccessRes
@@ -18,7 +20,9 @@ def ping(request: Request):
 @api_view(['GET'])
 @authentication_classes([JWTTokenAuthentication])
 @permission_classes([IsAuthenticated])
-def protected_ping(request: Request):
+@inject
+def protected_ping(request: Request, user_service: User = Provide['user_service']):
+    print(user_service.__class__.service.all()[0])
     user = {'id': request.user.id, 'email': request.user.email}
     return SuccessRes('Yeah!!. This route was protected behind jwt token!', {'user': user})
 

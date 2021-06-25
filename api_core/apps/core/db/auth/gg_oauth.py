@@ -1,13 +1,15 @@
 import urllib.parse
 import requests
+from dependency_injector.wiring import Provide, inject
 
-from api_core.apps.type import OAuthType, IOAuthService, GoogleOAuthResponse, GoogleOAuthUser
+from api_core.apps.type import OAuthType, IOAuthService, GoogleOAuthResponse, GoogleOAuthUser, OAuthUser
 from api_core.apps.core.utils.error.exceptions import OAuthError
 
 
+@inject
 class GoogleOAuth(IOAuthService):
-    def __init__(self):
-        super().__init__(OAuthType.GoogleOAuth)
+    def __init__(self, oauth_conf: dict = Provide['config.OAUTH']):
+        super().__init__(OAuthType.FaceBookOAuth, oauth_conf)
         self.grant_type = 'authorization_code'
 
     @property
@@ -53,3 +55,6 @@ class GoogleOAuth(IOAuthService):
             raise OAuthError('{0}. {1}'.format(data['error']['status'], data['error']['message']))
 
         return data
+
+    def oauth_login(self, oauth_user: OAuthUser):
+        return

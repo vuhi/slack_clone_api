@@ -6,6 +6,11 @@ class TokenError(Exception):
     pass
 
 
+class QueryActionNotAllowed(Exception):
+    """ any exception raises when using oauth service"""
+    pass
+
+
 class BadAuthHeader(exceptions.APIException):
     """ malformed header exception """
     status_code = status.HTTP_401_UNAUTHORIZED
@@ -47,4 +52,6 @@ class OAuthError(exceptions.APIException):
 
     def __init__(self, oauth_api_error: str, *args, **kwargs):
         super().__init__(detail=oauth_api_error, code=self.default_code)
+
+
 

@@ -164,6 +164,9 @@ Thumbs.db
 # profiling data
 .prof
 
+.txt
+*.txt
+
 
 ### Python ###
 # Byte-compiled / optimized / DLL files

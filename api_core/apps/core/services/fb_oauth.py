@@ -4,9 +4,9 @@ import urllib.parse
 from dependency_injector.wiring import inject, Provide
 
 from api_core.apps.type import OAuthType, IOAuthService, FaceBookOAuthResponse, FaceBookOAuthUser, OAuthUser
-from api_core.apps.core.utils.error.exceptions import OAuthError
-from .model import FaceBookAuth
-from ..user.model import User
+from ..db.auth.model import FaceBookAuth
+from ..db.user.model import User
+from ..utils.error.exceptions import OAuthError
 
 
 @inject

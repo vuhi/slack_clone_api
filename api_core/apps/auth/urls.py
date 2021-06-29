@@ -9,5 +9,4 @@ urlpatterns = [
     # POST
     path('register', views.register_user),
     path('login', views.login),
-    path('login/oauth', views.oauth_login),
 ]

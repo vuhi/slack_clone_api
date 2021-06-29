@@ -3,15 +3,16 @@ from dependency_injector.wiring import Provide, inject
 from rest_framework.decorators import api_view
 from rest_framework.request import Request
 
-from api_core.apps.core.db.auth.auth_service import AuthService
+# from api_core.apps.core.services.auth_service import AuthService
 from api_core.apps.core.utils.res.success import SuccessRes
+from api_core.apps.type import IAuthService
 
 
 @api_view(['GET'])
 @inject
 def get_oauth_config(
     request: Request,
-    auth_service: AuthService = Provide['auth_service']
+    auth_service: IAuthService = Provide['auth_service']
 ):
     """
     [GET]: api/auth/login/config
@@ -35,42 +36,21 @@ def register_user(request: Request):
 
 
 @api_view(['POST'])
-@inject
-def oauth_login(
+def login(
     request: Request,
-    auth_service: AuthService = Provide['auth_service'],
+    auth_service: IAuthService = Provide['auth_service'],
 ):
     """
-    [POST]: api/auth/exchange/code
-    :param  request.data[oauth_type], request.data[code], request.data[redirect_origin]
+    [POST]: api/auth/login
+    :param  request.data[email], request.data[password] --> normal flow
+            or
+            request.data[oauth_type], request.data[code], request.data[redirect_origin] --> oauth flow
     :param  auth_service injected by DI
     :return { token: str }
     """
-    oauth_user = auth_service.login(request.data)
-    # is_user_exist = user_service.get_user(email=oauth_user['email'])
-    # if not is_user_exist:
-        # create user
-        # pass
-    # get id & generate token
-    # print(user_service.test)
-
-    return SuccessRes(f'successfully exchanging code', {'token': 'oauth_login'})
+    token = auth_service.login(request.data)
+    return SuccessRes(f'successfully login in with normal flow', {'token': token})
 
 
-@api_view(['POST'])
-def login(request: Request):
-    # serializer = UserLoginSerializer(data=request.data)
-    # serializer.is_valid(raise_exception=True)
-    # credential = serializer.data
-    # try:
-    #     user = User.objects.get_active_user(email=credential.get('email'))
-    #     if not user.check_password(credential.get('password')):
-    #         raise Exception('password does not match')
-    #     token = AccessToken().sign(str(user.id))
-    #     user.last_login = timezone.now()
-    #     user.save()
-    #
-    #     return SuccessRes('user has been logged in successfully', {'token': token})
-    # except Exception as e:
-    #     raise InvalidLoginCredential()
-    return SuccessRes(f'successfully exchanging code', {'token': 'login'})
+
+

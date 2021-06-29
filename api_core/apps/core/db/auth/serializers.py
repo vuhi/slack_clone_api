@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from api_core.apps.type import OAuthType
-from api_core.apps.core.utils.error.exceptions import RequiredParametersAbsent
+from ...utils.error.exceptions import RequiredParametersAbsent
 
 
 class OAuthSerializer(serializers.Serializer):
@@ -33,13 +33,13 @@ class OAuthSerializer(serializers.Serializer):
 
 
 # noinspection PyAbstractClass
-class OAuthLoginBody(serializers.Serializer):
+class OAuthLoginSerializer(serializers.Serializer):
     oauth_type = serializers.CharField(max_length=50)
     email = serializers.EmailField(max_length=255)
 
 
 # noinspection PyAbstractClass
-class UserLoginSerializer(serializers.Serializer):
+class RegularLoginSerializer(serializers.Serializer):
     email = serializers.EmailField(max_length=255)
     password = serializers.CharField(max_length=512)
 

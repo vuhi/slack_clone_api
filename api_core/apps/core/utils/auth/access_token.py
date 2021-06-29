@@ -5,7 +5,7 @@ from dependency_injector.wiring import inject, Provide
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
 
-from api_core.apps.type import Claim, IToken, JWTConfig
+from api_core.apps.type import Claim, IToken, JWTConfig, RawToken
 from ...utils.error.exceptions import TokenError
 
 
@@ -22,7 +22,7 @@ class AccessToken(IToken):
         self.algorithm = jwt_conf.get('ALGORITHM')
         self.type = 'access_token'
 
-    def sign(self, user_id: str) -> str:
+    def sign(self, user_id: str) -> RawToken:
         current_time = timezone.now()
         payload = dict()
         payload.setdefault(self.CLAIM.ID, user_id)

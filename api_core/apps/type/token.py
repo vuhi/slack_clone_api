@@ -3,6 +3,9 @@ import abc
 from .claim import Claim
 
 
+RawToken = str
+
+
 class IToken(metaclass=abc.ABCMeta):
 
     class CLAIM:
@@ -13,10 +16,12 @@ class IToken(metaclass=abc.ABCMeta):
         EXP_TIME = 'exp'
 
     @abc.abstractmethod
-    def sign(self, user_id: str) -> str:
+    def sign(self, user_id: str) -> RawToken:
         raise NotImplementedError
 
     @abc.abstractmethod
     def decode(self, raw_token: str, should_verify=True) -> Claim:
         raise NotImplementedError
+
+
 

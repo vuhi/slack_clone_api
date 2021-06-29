@@ -3,7 +3,9 @@ import requests
 from dependency_injector.wiring import Provide, inject
 
 from api_core.apps.type import OAuthType, IOAuthService, GoogleOAuthResponse, GoogleOAuthUser, OAuthUser
-from api_core.apps.core.utils.error.exceptions import OAuthError
+
+from ..db.user.model import User
+from ..utils.error.exceptions import OAuthError
 
 
 @inject
@@ -56,5 +58,5 @@ class GoogleOAuth(IOAuthService):
 
         return data
 
-    def oauth_login(self, oauth_user: OAuthUser):
-        return
+    def oauth_login(self, oauth_user: OAuthUser) -> User:
+        raise NotImplementedError

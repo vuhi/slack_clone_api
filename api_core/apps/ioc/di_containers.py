@@ -1,17 +1,20 @@
 from dependency_injector import containers, providers
 
 from api_core import settings
-from api_core.apps.core.db.auth.auth_service import AuthService
-from api_core.apps.core.db.auth.fb_oauth import FaceBookOAuth
-from api_core.apps.core.db.auth.gg_oauth import GoogleOAuth
-from api_core.apps.core.utils.auth.access_token import AccessToken
 from api_core.apps.core.db.user.model import User
+from api_core.apps.core.services.fb_oauth import FaceBookOAuth
+from api_core.apps.core.services.gg_oauth import GoogleOAuth
+from api_core.apps.core.services.auth_service import AuthService
+from api_core.apps.core.services.oauth_factory import OAuthFactory
+from api_core.apps.core.utils.auth.access_token import AccessToken
 
 
 class DIContainer(containers.DeclarativeContainer):
     config = providers.Configuration()
+
     google_oauth = providers.Factory(GoogleOAuth)
     facebook_oauth = providers.Factory(FaceBookOAuth)
+    oauth_factory = providers.Factory(OAuthFactory)
 
     auth_service = providers.Factory(AuthService)
     token_service = providers.Factory(AccessToken)

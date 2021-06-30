@@ -6,7 +6,7 @@ from ..utils.error.exceptions import InvalidLoginCredential
 
 
 class RegularLoginStrategy(ILoginStrategy):
-    def __init__(self, request_body: dict):
+    def __init__(self, request_body: dict, *args):
         self.request_body = request_body
         self.serializer = RegularLoginSerializer(data=request_body)
 

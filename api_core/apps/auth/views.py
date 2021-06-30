@@ -26,6 +26,7 @@ def get_oauth_config(
 
 
 @api_view(['POST'])
+@inject
 def register_user(request: Request):
     # serializer = UserSerializer(data=request.data)
     # serializer.is_valid(raise_exception=True)
@@ -36,9 +37,10 @@ def register_user(request: Request):
 
 
 @api_view(['POST'])
+@inject
 def login(
     request: Request,
-    auth_service: IAuthService = Provide['auth_service'],
+    auth_service: IAuthService = Provide['auth_service']
 ):
     """
     [POST]: api/auth/login

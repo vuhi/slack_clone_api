@@ -1,6 +1,5 @@
 from abc import ABCMeta, abstractmethod
 
-from .oauth import OAuthUser
 from .token import RawToken
 from ..core.db.user.model import User
 from ..core.services.oauth_factory import OAuthFactory
@@ -8,7 +7,7 @@ from ..core.services.oauth_factory import OAuthFactory
 
 class ILoginStrategy(metaclass=ABCMeta):
     @abstractmethod
-    def __init__(self, request_body: dict, oauth_factory: OAuthFactory = None):
+    def __init__(self, request_body: dict, oauth_factory: OAuthFactory):
         raise NotImplementedError
 
     @abstractmethod

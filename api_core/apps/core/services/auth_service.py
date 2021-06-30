@@ -28,7 +28,7 @@ class AuthService(IAuthService):
         return self.oauth_factory.get_oauth_service(oauth_type)
 
     def __get_login_strategy_cls(self, oauth_type: str) -> Type[ILoginStrategy]:
-        return self.RegularLoginStrategy if oauth_type else self.OAuthLoginStrategy
+        return self.RegularLoginStrategy if oauth_type is None else self.OAuthLoginStrategy
 
     def get_oauth_config(self, request_params: dict) -> dict:
         serializer = self.OAuthSerializer(data=request_params, required_fields=['oauth_type'])
@@ -38,7 +38,7 @@ class AuthService(IAuthService):
         return oauth_service.get_config()
 
     def login(self, request_body: dict) -> RawToken:
-        oauth_type = request_body['oauth_type']
+        oauth_type = request_body.get('oauth_type', None)
         login_strategy_cls = self.__get_login_strategy_cls(oauth_type)
 
         login_strategy = login_strategy_cls(request_body, self.oauth_factory)

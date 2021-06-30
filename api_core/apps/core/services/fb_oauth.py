@@ -63,9 +63,6 @@ class FaceBookOAuth(IOAuthService):
         return data
 
     def oauth_login(self, oauth_user: OAuthUser) -> User:
-        # oauth login email always stays the same
-        # if a person have two different social account -> 2 users will be created
-        # get by oauth_id or create new record in oauth table
         facebook_auth, created = self.FaceBookAuth.service.get_or_create(
             oauth_id=oauth_user['id'],
             defaults={'oauth_id': oauth_user['id']}

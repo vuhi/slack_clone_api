@@ -126,6 +126,10 @@ class IOAuthService(metaclass=ABCMeta):
     def get_oauth_user(self, oauth_token: str) -> OAuthUser:
         raise NotImplementedError
 
+    # oauth login email always stays the same
+    # the user's full name will be independence from user's full name in oauth user
+    # if a person have two different social account -> 2 users will be created
+    # get by oauth_id or create new record in oauth table
     @abstractmethod
     def oauth_login(self, oauth_user: OAuthUser) -> User:
         raise NotImplementedError

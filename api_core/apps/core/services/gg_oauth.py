@@ -4,6 +4,7 @@ from dependency_injector.wiring import Provide, inject
 
 from api_core.apps.type import OAuthType, IOAuthService, GoogleOAuthResponse, GoogleOAuthUser, OAuthUser
 
+from ..db.auth.model import GoogleAuth
 from ..db.user.model import User
 from ..utils.error.exceptions import OAuthError
 
@@ -11,8 +12,10 @@ from ..utils.error.exceptions import OAuthError
 @inject
 class GoogleOAuth(IOAuthService):
     def __init__(self, oauth_conf: dict = Provide['config.OAUTH']):
-        super().__init__(OAuthType.FaceBookOAuth, oauth_conf)
+        super().__init__(OAuthType.GoogleOAuth, oauth_conf)
         self.grant_type = 'authorization_code'
+        self.GoogleAuth = GoogleAuth
+        self.User = User
 
     @property
     def scopes(self) -> str:
@@ -59,4 +62,19 @@ class GoogleOAuth(IOAuthService):
         return data
 
     def oauth_login(self, oauth_user: OAuthUser) -> User:
-        raise NotImplementedError
+        google_auth, created = self.GoogleAuth.service.get_or_create(
+            oauth_id=oauth_user['id'],
+            defaults={'oauth_id': oauth_user['id']}
+        )
+
+        if created:
+            user = self.User.service.create_user(
+                email=oauth_user['email'],
+                full_name=oauth_user['name'],
+                password=None
+            )
+            user.google_auth = google_auth
+            user.google_auth.save()
+            return user
+
+        return google_auth.user

@@ -5,9 +5,17 @@ from ..core.db.user.model import User
 from ..core.services.oauth_factory import OAuthFactory
 
 
+StrategyType = str
+
+
 class ILoginStrategy(metaclass=ABCMeta):
     @abstractmethod
     def __init__(self, request_body: dict, oauth_factory: OAuthFactory):
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def strategy_type(self) -> StrategyType:
         raise NotImplementedError
 
     @abstractmethod
@@ -25,7 +33,7 @@ class IAuthService(metaclass=ABCMeta):
         raise NotImplementedError
 
     @abstractmethod
-    def login(self, login_strategy: ILoginStrategy) -> RawToken:
+    def login(self, login_strategy: ILoginStrategy) -> (RawToken, StrategyType):
         raise NotImplementedError
 
     @abstractmethod

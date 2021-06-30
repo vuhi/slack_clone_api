@@ -1,4 +1,4 @@
-from api_core.apps.type.service import ILoginStrategy
+from api_core.apps.type.service import ILoginStrategy, StrategyType
 from ..db.auth.serializers import RegularLoginSerializer, OAuthSerializer
 from ..db.user.model import User
 from ..services.oauth_factory import OAuthFactory
@@ -9,6 +9,10 @@ class RegularLoginStrategy(ILoginStrategy):
     def __init__(self, request_body: dict, *args):
         self.request_body = request_body
         self.serializer = RegularLoginSerializer(data=request_body)
+
+    @property
+    def strategy_type(self) -> StrategyType:
+        return 'regular login flow'
 
     def validate_data(self) -> None:
         self.serializer.is_valid(raise_exception=True)
@@ -29,6 +33,10 @@ class OAuthLoginStrategy(ILoginStrategy):
         self.request_body = request_body
         self.serializer = OAuthSerializer(data=request_body)
         self.oauth_factory = oauth_factory
+
+    @property
+    def strategy_type(self) -> StrategyType:
+        return 'oauth login flow'
 
     def validate_data(self) -> None:
         self.serializer.is_valid(raise_exception=True)

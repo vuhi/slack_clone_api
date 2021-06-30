@@ -11,7 +11,7 @@ from .login_strategies import RegularLoginStrategy, OAuthLoginStrategy
 from ..db.auth.serializers import OAuthSerializer
 from ..db.auth.model import Auth
 from ..utils.auth.access_token import AccessToken
-from ...type.service import ILoginStrategy
+from ...type.service import ILoginStrategy, StrategyType
 
 
 @inject
@@ -37,7 +37,7 @@ class AuthService(IAuthService):
         oauth_service = self.__get_oauth_service(serializer.data.get('oauth_type'))
         return oauth_service.get_config()
 
-    def login(self, request_body: dict) -> RawToken:
+    def login(self, request_body: dict) -> (RawToken, StrategyType):
         oauth_type = request_body.get('oauth_type', None)
         login_strategy_cls = self.__get_login_strategy_cls(oauth_type)
 
@@ -48,7 +48,7 @@ class AuthService(IAuthService):
         user.last_login = timezone.now()
         user.save()
 
-        return self.token.sign(str(user.id))
+        return self.token.sign(str(user.id)), login_strategy.strategy_type
 
     def register_user(self):
         # serializer = UserSerializer(data=request.data)

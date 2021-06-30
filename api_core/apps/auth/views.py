@@ -3,7 +3,6 @@ from dependency_injector.wiring import Provide, inject
 from rest_framework.decorators import api_view
 from rest_framework.request import Request
 
-# from api_core.apps.core.services.auth_service import AuthService
 from api_core.apps.core.utils.res.success import SuccessRes
 from api_core.apps.type import IAuthService
 
@@ -50,8 +49,8 @@ def login(
     :param  auth_service injected by DI
     :return { token: str }
     """
-    token = auth_service.login(request.data)
-    return SuccessRes(f'successfully login in with normal flow', {'token': token})
+    token, strategy_type = auth_service.login(request.data)
+    return SuccessRes(f'successfully login in with {strategy_type}', {'token': token})
 
 
 

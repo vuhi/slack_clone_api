@@ -6,4 +6,4 @@ from .config import JWTConfig, OAuthConfig
 from .oauth import OAuthType, IOAuthService, OAuthResponse, OAuthUser, \
     GoogleOAuthResponse, GoogleOAuthUser, \
     FaceBookOAuthResponse, FaceBookOAuthUser
-from .service import IAuthService
+from .service import IAuthService, StrategyType
